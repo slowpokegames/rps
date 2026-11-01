@@ -277,6 +277,7 @@ button { font: inherit; color: inherit; }
 }
 .dialog h2 { font-family: var(--f-display); font-weight: 900; font-size: 50px; line-height: 0.95; margin: 0; text-wrap: balance; }
 .dialog p { margin: 0; color: var(--muted); }
+.dialog-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 </style>
 
 <div class="shell">
@@ -320,7 +321,10 @@ button { font: inherit; color: inherit; }
   <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="end-title">
     <h2 id="end-title"></h2>
     <p id="end-sub"></p>
-    <button type="button" class="btn" id="again">Play again</button>
+    <div class="dialog-actions">
+      <button type="button" class="btn ghost" id="close-end">Close</button>
+      <button type="button" class="btn" id="again">Play again</button>
+    </div>
   </div>
 </div>
 
@@ -369,10 +373,12 @@ button { font: inherit; color: inherit; }
   } catch (_) {}
   const persist = () => { try { localStorage.setItem("rps5-table", JSON.stringify({ gid, opponents, score })); } catch (_) {} };
 
+  let over = false;
   function endGame(won, title, sub) {
     const s = score[gid] = score[gid] || { you: 0, bots: 0, draws: 0 };
     if (won === true) s.you++; else if (won === false) s.bots++; else s.draws++;
     persist(); renderScore();
+    over = true;
     later(() => {
       $("end-title").textContent = title;
       $("end-sub").textContent = sub;
@@ -1021,13 +1027,15 @@ button { font: inherit; color: inherit; }
   }
   function newGame() {
     gen++;
+    over = false;
     $("overlay").hidden = true;
     G = GAMES[gid];
     G.start();
     persist(); renderChrome(); draw();
   }
 
-  $("stage").addEventListener("click", e => G && G.click(e));
+  // Once a game has ended the board stays up for review, but moves are ignored until a new game starts.
+  $("stage").addEventListener("click", e => G && !over && G.click(e));
   $("stage").addEventListener("change", e => { if (e.target.id === "st-odds-box") { st.odds = e.target.checked; draw(); } });
   $("tabs").addEventListener("click", e => {
     const b = e.target.closest("[data-g]");
@@ -1036,6 +1044,10 @@ button { font: inherit; color: inherit; }
   $("seg").addEventListener("click", e => { const b = e.target.closest("[data-n]"); if (b) { opponents = +b.dataset.n; newGame(); } });
   $("new-game").addEventListener("click", newGame);
   $("again").addEventListener("click", newGame);
+  const closeEnd = () => { $("overlay").hidden = true; };
+  $("close-end").addEventListener("click", closeEnd);
+  $("overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeEnd(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("overlay").hidden) closeEnd(); });
 
   renderWheel(); renderScore();
 
