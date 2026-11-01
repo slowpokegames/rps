@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&display=swap">
+<style>
+html,body{margin:0;background:transparent}
+svg{display:block}
+.glyph{font-family:"Apple Color Emoji";font-size:74px;text-anchor:middle;dominant-baseline:central}
+.word{font-family:"Big Shoulders Display";font-weight:900}
+</style></head><body>
+<svg id="s" width="900" height="900" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg"></svg>
+<script>
+const B=[[0,0,1,1,0],[1,0,0,0,1],[0,1,0,1,0],[0,1,0,0,1],[1,0,1,0,0]];
+const COL=["#BABABA","#EAD410","#E81020","#00A878","#8028BE"];
+const GLYPH=["✊","🖐","✌","🤌","🖖"];
+const FILT=["grayscale(1)","none","hue-rotate(-50deg) saturate(2.2)","hue-rotate(100deg) brightness(0.78)","hue-rotate(226deg) saturate(1) brightness(0.8)"];
+// clockwise order so every outer edge points forward: S→P→R→L→I→S
+const ORDER=[2,1,0,3,4];
+const cx=450, cy=372, R=250, r=58;
+const pos={}; ORDER.forEach((s,k)=>{const a=-Math.PI/2+k*2*Math.PI/5; pos[s]=[cx+R*Math.cos(a), cy+R*Math.sin(a)];});
+let out=`
+<defs>
+  <radialGradient id="felt" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#22504b"/><stop offset="1" stop-color="#0f2725"/></radialGradient>
+  <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity=".35"/></filter>
+  <filter id="sh2"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000" flood-opacity=".45"/></filter>`;
+for(let i=0;i<5;i++) out+=`<marker id="m${i}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${COL[i]}"/></marker>`;
+out+=`</defs>
+<circle cx="${cx}" cy="${cy}" r="${R+r+42}" fill="url(#felt)" filter="url(#sh)"/>
+<circle cx="${cx}" cy="${cy}" r="${R+r+42}" fill="none" stroke="#e0ad4c" stroke-width="10"/>
+<circle cx="${cx}" cy="${cy}" r="${R+r+24}" fill="none" stroke="#e0ad4c" stroke-width="2" opacity=".55"/>`;
+// arrows: attacker colour, trimmed to clear the medallions
+for(let a=0;a<5;a++) for(let b=0;b<5;b++) if(B[a][b]){
+  const [x1,y1]=pos[a],[x2,y2]=pos[b]; const dx=x2-x1, dy=y2-y1, L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L;
+  const s=r+10, e=r+14;
+  out+=`<line x1="${x1+ux*s}" y1="${y1+uy*s}" x2="${x2-ux*e}" y2="${y2-uy*e}" stroke="${COL[a]}" stroke-width="9" stroke-linecap="round" marker-end="url(#m${a})" opacity=".92"/>`;
+}
+for(let s=0;s<5;s++){ const [x,y]=pos[s];
+  out+=`<g filter="url(#sh2)"><circle cx="${x}" cy="${y}" r="${r}" fill="#fafaf8"/><circle cx="${x}" cy="${y}" r="${r-4}" fill="none" stroke="${COL[s]}" stroke-width="9"/></g>
+  <text class="glyph" x="${x}" y="${y+3}" style="filter:${FILT[s]}">${GLYPH[s]}</text>`;
+}
+// banner
+out+=`<g filter="url(#sh)"><rect x="245" y="690" width="410" height="104" rx="16" fill="#e0ad4c" stroke="#2a1d05" stroke-opacity=".25" stroke-width="3"/></g>
+<text class="word" x="450" y="744" font-size="78" fill="#2a1d05" text-anchor="middle" dominant-baseline="central" letter-spacing="6">RPS-5</text>`;
+document.getElementById("s").innerHTML=out;
+</script></body></html>
