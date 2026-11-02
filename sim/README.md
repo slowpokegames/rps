@@ -9,6 +9,8 @@ node tourney.mjs flank 1000   # one game, N games per pairing
 
 `results.md` holds the latest run. The RNG is seeded, so results are reproducible.
 
+`node matrix.mjs` plays every player against every other in every game, including each player at a table of three copies of every other in the four-player games, and writes `matrix.json`. `node export.mjs` turns that into `matchups.csv` and `cast.csv`, the data behind the matchup dashboard.
+
 ## The cast
 
 | Archetype | Trait |

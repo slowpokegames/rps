@@ -1,0 +1,241 @@
+table,table_title,game,players,player,opponent,win_share,fair_share,games
+showdown,Showdown,showdown,2,Rando,Grabby,0.1393,0.5,4000
+showdown,Showdown,showdown,2,Rando,Ada,0.2467,0.5,4000
+showdown,Showdown,showdown,2,Rando,Turtle,0.1345,0.5,4000
+showdown,Showdown,showdown,2,Rando,Daredevil,0.172,0.5,4000
+showdown,Showdown,showdown,2,Rando,Nash,0.3019,0.5,4000
+showdown,Showdown,showdown,2,Rando,Saver,0.1396,0.5,4000
+showdown,Showdown,showdown,2,Rando,Sage,0.246,0.5,4000
+showdown,Showdown,showdown,2,Grabby,Rando,0.8671,0.5,4000
+showdown,Showdown,showdown,2,Grabby,Ada,0.6398,0.5,4000
+showdown,Showdown,showdown,2,Grabby,Turtle,0.4656,0.5,4000
+showdown,Showdown,showdown,2,Grabby,Daredevil,0.5304,0.5,4000
+showdown,Showdown,showdown,2,Grabby,Nash,0.1715,0.5,4000
+showdown,Showdown,showdown,2,Grabby,Saver,0.4984,0.5,4000
+showdown,Showdown,showdown,2,Grabby,Sage,0.0027,0.5,4000
+showdown,Showdown,showdown,2,Ada,Rando,0.7395,0.5,4000
+showdown,Showdown,showdown,2,Ada,Grabby,0.3719,0.5,4000
+showdown,Showdown,showdown,2,Ada,Turtle,0.3576,0.5,4000
+showdown,Showdown,showdown,2,Ada,Daredevil,0.397,0.5,4000
+showdown,Showdown,showdown,2,Ada,Nash,0.248,0.5,4000
+showdown,Showdown,showdown,2,Ada,Saver,0.3584,0.5,4000
+showdown,Showdown,showdown,2,Ada,Sage,0.0493,0.5,4000
+showdown,Showdown,showdown,2,Turtle,Rando,0.8562,0.5,4000
+showdown,Showdown,showdown,2,Turtle,Grabby,0.5304,0.5,4000
+showdown,Showdown,showdown,2,Turtle,Ada,0.6528,0.5,4000
+showdown,Showdown,showdown,2,Turtle,Daredevil,0.5676,0.5,4000
+showdown,Showdown,showdown,2,Turtle,Nash,0.19,0.5,4000
+showdown,Showdown,showdown,2,Turtle,Saver,0.5159,0.5,4000
+showdown,Showdown,showdown,2,Turtle,Sage,0.007,0.5,4000
+showdown,Showdown,showdown,2,Daredevil,Rando,0.8303,0.5,4000
+showdown,Showdown,showdown,2,Daredevil,Grabby,0.4826,0.5,4000
+showdown,Showdown,showdown,2,Daredevil,Ada,0.6296,0.5,4000
+showdown,Showdown,showdown,2,Daredevil,Turtle,0.444,0.5,4000
+showdown,Showdown,showdown,2,Daredevil,Nash,0.1999,0.5,4000
+showdown,Showdown,showdown,2,Daredevil,Saver,0.4629,0.5,4000
+showdown,Showdown,showdown,2,Daredevil,Sage,0.0091,0.5,4000
+showdown,Showdown,showdown,2,Nash,Rando,0.6884,0.5,4000
+showdown,Showdown,showdown,2,Nash,Grabby,0.8241,0.5,4000
+showdown,Showdown,showdown,2,Nash,Ada,0.7531,0.5,4000
+showdown,Showdown,showdown,2,Nash,Turtle,0.811,0.5,4000
+showdown,Showdown,showdown,2,Nash,Daredevil,0.7926,0.5,4000
+showdown,Showdown,showdown,2,Nash,Saver,0.8137,0.5,4000
+showdown,Showdown,showdown,2,Nash,Sage,0.616,0.5,4000
+showdown,Showdown,showdown,2,Saver,Rando,0.8596,0.5,4000
+showdown,Showdown,showdown,2,Saver,Grabby,0.505,0.5,4000
+showdown,Showdown,showdown,2,Saver,Ada,0.6358,0.5,4000
+showdown,Showdown,showdown,2,Saver,Turtle,0.4679,0.5,4000
+showdown,Showdown,showdown,2,Saver,Daredevil,0.5389,0.5,4000
+showdown,Showdown,showdown,2,Saver,Nash,0.1782,0.5,4000
+showdown,Showdown,showdown,2,Saver,Sage,0.0029,0.5,4000
+showdown,Showdown,showdown,2,Sage,Rando,0.7595,0.5,4000
+showdown,Showdown,showdown,2,Sage,Grabby,0.9956,0.5,4000
+showdown,Showdown,showdown,2,Sage,Ada,0.9564,0.5,4000
+showdown,Showdown,showdown,2,Sage,Turtle,0.9956,0.5,4000
+showdown,Showdown,showdown,2,Sage,Daredevil,0.9911,0.5,4000
+showdown,Showdown,showdown,2,Sage,Nash,0.3779,0.5,4000
+showdown,Showdown,showdown,2,Sage,Saver,0.9959,0.5,4000
+flank,Flank,flank,2,Rando,Grabby,0.0005,0.5,1000
+flank,Flank,flank,2,Rando,Ada,0,0.5,1000
+flank,Flank,flank,2,Rando,Turtle,0,0.5,1000
+flank,Flank,flank,2,Rando,Cornerist,0.0005,0.5,1000
+flank,Flank,flank,2,Rando,Sage,0,0.5,1000
+flank,Flank,flank,2,Grabby,Rando,0.9995,0.5,1000
+flank,Flank,flank,2,Grabby,Ada,0.136,0.5,1000
+flank,Flank,flank,2,Grabby,Turtle,0.2505,0.5,1000
+flank,Flank,flank,2,Grabby,Cornerist,0.4785,0.5,1000
+flank,Flank,flank,2,Grabby,Sage,0.257,0.5,1000
+flank,Flank,flank,2,Ada,Rando,1,0.5,1000
+flank,Flank,flank,2,Ada,Grabby,0.8535,0.5,1000
+flank,Flank,flank,2,Ada,Turtle,0.57,0.5,1000
+flank,Flank,flank,2,Ada,Cornerist,0.571,0.5,1000
+flank,Flank,flank,2,Ada,Sage,0.7885,0.5,1000
+flank,Flank,flank,2,Turtle,Rando,1,0.5,1000
+flank,Flank,flank,2,Turtle,Grabby,0.7395,0.5,1000
+flank,Flank,flank,2,Turtle,Ada,0.4135,0.5,1000
+flank,Flank,flank,2,Turtle,Cornerist,0.555,0.5,1000
+flank,Flank,flank,2,Turtle,Sage,0.6675,0.5,1000
+flank,Flank,flank,2,Cornerist,Rando,0.999,0.5,1000
+flank,Flank,flank,2,Cornerist,Grabby,0.537,0.5,1000
+flank,Flank,flank,2,Cornerist,Ada,0.437,0.5,1000
+flank,Flank,flank,2,Cornerist,Turtle,0.4455,0.5,1000
+flank,Flank,flank,2,Cornerist,Sage,0.4815,0.5,1000
+flank,Flank,flank,2,Sage,Rando,0.999,0.5,1000
+flank,Flank,flank,2,Sage,Grabby,0.757,0.5,1000
+flank,Flank,flank,2,Sage,Ada,0.2225,0.5,1000
+flank,Flank,flank,2,Sage,Turtle,0.347,0.5,1000
+flank,Flank,flank,2,Sage,Cornerist,0.4965,0.5,1000
+rr,Round Robin,rr,4,Rando,Grabby,0.1462,0.25,800
+rr,Round Robin,rr,4,Rando,Ada,0.0098,0.25,800
+rr,Round Robin,rr,4,Rando,Turtle,0.152,0.25,800
+rr,Round Robin,rr,4,Rando,Trumper,0.0154,0.25,800
+rr,Round Robin,rr,4,Rando,Sage,0.0163,0.25,800
+rr,Round Robin,rr,4,Grabby,Rando,0.3618,0.25,800
+rr,Round Robin,rr,4,Grabby,Ada,0.0161,0.25,800
+rr,Round Robin,rr,4,Grabby,Turtle,0.2531,0.25,800
+rr,Round Robin,rr,4,Grabby,Trumper,0.0253,0.25,800
+rr,Round Robin,rr,4,Grabby,Sage,0.0069,0.25,800
+rr,Round Robin,rr,4,Ada,Rando,0.8215,0.25,800
+rr,Round Robin,rr,4,Ada,Grabby,0.7528,0.25,800
+rr,Round Robin,rr,4,Ada,Turtle,0.6922,0.25,800
+rr,Round Robin,rr,4,Ada,Trumper,0.2156,0.25,800
+rr,Round Robin,rr,4,Ada,Sage,0.2305,0.25,800
+rr,Round Robin,rr,4,Turtle,Rando,0.3252,0.25,800
+rr,Round Robin,rr,4,Turtle,Grabby,0.3148,0.25,800
+rr,Round Robin,rr,4,Turtle,Ada,0.0523,0.25,800
+rr,Round Robin,rr,4,Turtle,Trumper,0.0543,0.25,800
+rr,Round Robin,rr,4,Turtle,Sage,0.0421,0.25,800
+rr,Round Robin,rr,4,Trumper,Rando,0.7925,0.25,800
+rr,Round Robin,rr,4,Trumper,Grabby,0.7167,0.25,800
+rr,Round Robin,rr,4,Trumper,Ada,0.2576,0.25,800
+rr,Round Robin,rr,4,Trumper,Turtle,0.6725,0.25,800
+rr,Round Robin,rr,4,Trumper,Sage,0.2305,0.25,800
+rr,Round Robin,rr,4,Sage,Rando,0.8618,0.25,800
+rr,Round Robin,rr,4,Sage,Grabby,0.8646,0.25,800
+rr,Round Robin,rr,4,Sage,Ada,0.2443,0.25,800
+rr,Round Robin,rr,4,Sage,Turtle,0.7236,0.25,800
+rr,Round Robin,rr,4,Sage,Trumper,0.2192,0.25,800
+streak2,"Streak, 1 bot",streak,2,Rando,Timid,0.282,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Rando,Ada,0.0313,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Rando,Daredevil,0.823,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Rando,Hoarder,0.1824,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Rando,Spender,0,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Rando,Sage,0,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Timid,Rando,0.7161,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Timid,Ada,0.049,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Timid,Daredevil,0.8662,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Timid,Hoarder,0.2771,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Timid,Spender,0.0003,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Timid,Sage,0,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Ada,Rando,0.9611,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Ada,Timid,0.9443,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Ada,Daredevil,0.9286,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Ada,Hoarder,0.8579,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Ada,Spender,0.3426,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Ada,Sage,0.3478,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Daredevil,Rando,0.1836,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Daredevil,Timid,0.1361,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Daredevil,Ada,0.0693,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Daredevil,Hoarder,0.1276,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Daredevil,Spender,0.0216,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Daredevil,Sage,0.0211,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Hoarder,Rando,0.8166,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Hoarder,Timid,0.714,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Hoarder,Ada,0.1369,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Hoarder,Daredevil,0.8672,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Hoarder,Spender,0.0091,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Hoarder,Sage,0.0094,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Spender,Rando,0.9992,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Spender,Timid,1,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Spender,Ada,0.6385,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Spender,Daredevil,0.9786,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Spender,Hoarder,0.9906,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Spender,Sage,0.473,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Sage,Rando,1,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Sage,Timid,1,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Sage,Ada,0.6398,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Sage,Daredevil,0.9799,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Sage,Hoarder,0.9918,0.5,4000
+streak2,"Streak, 1 bot",streak,2,Sage,Spender,0.5406,0.5,4000
+streak4,"Streak, 3 bots",streak,4,Rando,Timid,0.1528,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Rando,Ada,0.0092,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Rando,Daredevil,0.5676,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Rando,Hoarder,0.0699,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Rando,Spender,0.0014,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Rando,Sage,0.0013,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Timid,Rando,0.4065,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Timid,Ada,0.0105,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Timid,Daredevil,0.6199,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Timid,Hoarder,0.0763,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Timid,Spender,0,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Timid,Sage,0,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Ada,Rando,0.8267,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Ada,Timid,0.8114,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Ada,Daredevil,0.726,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Ada,Hoarder,0.5855,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Ada,Spender,0.2859,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Ada,Sage,0.2352,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Daredevil,Rando,0.1111,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Daredevil,Timid,0.0909,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Daredevil,Ada,0.0279,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Daredevil,Hoarder,0.0598,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Daredevil,Spender,0.0211,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Daredevil,Sage,0.0238,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Hoarder,Rando,0.5622,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Hoarder,Timid,0.5242,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Hoarder,Ada,0.0475,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Hoarder,Daredevil,0.6119,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Hoarder,Spender,0.016,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Hoarder,Sage,0.0072,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Spender,Rando,0.9935,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Spender,Timid,0.999,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Spender,Ada,0.2658,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Spender,Daredevil,0.8735,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Spender,Hoarder,0.8389,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Spender,Sage,0.1609,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Sage,Rando,0.9895,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Sage,Timid,0.9998,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Sage,Ada,0.3182,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Sage,Daredevil,0.872,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Sage,Hoarder,0.8527,0.25,2000
+streak4,"Streak, 3 bots",streak,4,Sage,Spender,0.3766,0.25,2000
+classic2,"Classic, 1 bot",classic,2,Rando,Ada,0.0678,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Rando,Grabby,0.0635,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Rando,Dumper,0.4657,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Rando,Blocker,0.4783,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Ada,Rando,0.9357,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Ada,Grabby,0.5301,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Ada,Dumper,0.907,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Ada,Blocker,0.9031,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Grabby,Rando,0.9266,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Grabby,Ada,0.4651,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Grabby,Dumper,0.909,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Grabby,Blocker,0.9115,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Dumper,Rando,0.5437,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Dumper,Ada,0.0897,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Dumper,Grabby,0.0886,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Dumper,Blocker,0.4975,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Blocker,Rando,0.5333,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Blocker,Ada,0.092,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Blocker,Grabby,0.0922,0.5,4000
+classic2,"Classic, 1 bot",classic,2,Blocker,Dumper,0.512,0.5,4000
+classic4,"Classic, 3 bots",classic,4,Rando,Ada,0.0081,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Rando,Grabby,0.0091,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Rando,Dumper,0.234,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Rando,Blocker,0.252,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Ada,Rando,0.3475,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Ada,Grabby,0.2634,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Ada,Dumper,0.32,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Ada,Blocker,0.3325,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Grabby,Rando,0.3705,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Grabby,Ada,0.2521,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Grabby,Dumper,0.32,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Grabby,Blocker,0.3265,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Dumper,Rando,0.2435,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Dumper,Ada,0.0121,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Dumper,Grabby,0.0071,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Dumper,Blocker,0.254,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Blocker,Rando,0.2525,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Blocker,Ada,0.012,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Blocker,Grabby,0.0107,0.25,2000
+classic4,"Classic, 3 bots",classic,4,Blocker,Dumper,0.2485,0.25,2000

@@ -1,0 +1,33 @@
+game,player,level,trait
+showdown,Rando,Easy,Plays a card at random.
+showdown,Ada,Medium,"Leans toward cards that beat most of your hand, with some randomness."
+showdown,Grabby,Medium,Always plays the card that beats most of your hand.
+showdown,Daredevil,Medium,"Goes for the biggest points margin, not just the win."
+showdown,Turtle,Medium,Plays the card whose worst case against your hand is least bad.
+showdown,Saver,Medium,Spends weak cards on small stakes and saves strong ones for a pot.
+showdown,Nash,Hard,Mixes its picks so they can't be read or exploited.
+showdown,Sage,Hard,Predicts which card you'll play and counters it.
+flank,Rando,Easy,Plays any card on any square.
+flank,Grabby,Easy,Takes the biggest capture every time.
+flank,Cornerist,Medium,"Grabs captures, but loves corners and edges."
+flank,Sage,Medium,Plays for the best net result after your strongest reply.
+flank,Turtle,Hard,Captures carefully and shelters on the edges.
+flank,Ada,Hard,"Captures, but avoids leaving squares you can hit back from."
+rr,Rando,Easy,Plays any legal card.
+rr,Grabby,Easy,Always plays its strongest card.
+rr,Turtle,Easy,Only fights for a trick when it plays last.
+rr,Ada,Medium,"Leads strong, wins cheaply when it can, otherwise throws its weakest card."
+rr,Trumper,Medium,Tries to run out of a glyph so it can trump.
+rr,Sage,Hard,Simulates the rest of the trick to find its best card.
+streak,Rando,Easy,Flips or banks on a coin toss.
+streak,Timid,Easy,Banks as soon as it has 2.
+streak,Daredevil,Easy,Keeps flipping while the odds are better than 60%.
+streak,Hoarder,Easy,"Flips while the odds justify it, but never plays from its hand."
+streak,Ada,Medium,"Flips while the odds justify it, then plays a hand card or banks."
+streak,Spender,Hard,"Plays every safe hand card first, then flips while the odds justify it."
+streak,Sage,Hard,"Like Spender, but pushes harder when behind late and banks earlier when well ahead."
+classic,Rando,Easy,Plays any legal card.
+classic,Dumper,Easy,Gets rid of its hardest-to-play cards first.
+classic,Blocker,Easy,Leaves the next player as little as possible to follow.
+classic,Ada,Medium,"Beats as many positions as it can, hardest when the next player is nearly out."
+classic,Grabby,Medium,Always beats as many positions as possible.

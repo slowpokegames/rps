@@ -1,0 +1,481 @@
+{
+ "showdown": {
+  "title": "Showdown",
+  "names": [
+   "Rando",
+   "Grabby",
+   "Ada",
+   "Turtle",
+   "Daredevil",
+   "Nash",
+   "Saver",
+   "Sage"
+  ],
+  "size": 2,
+  "N": 4000,
+  "M": {
+   "Rando": {
+    "Rando": 0.5,
+    "Grabby": 0.13925,
+    "Ada": 0.24675,
+    "Turtle": 0.1345,
+    "Daredevil": 0.172,
+    "Nash": 0.301875,
+    "Saver": 0.139625,
+    "Sage": 0.246
+   },
+   "Grabby": {
+    "Rando": 0.867125,
+    "Grabby": 0.5,
+    "Ada": 0.63975,
+    "Turtle": 0.465625,
+    "Daredevil": 0.530375,
+    "Nash": 0.1715,
+    "Saver": 0.498375,
+    "Sage": 0.00275
+   },
+   "Ada": {
+    "Rando": 0.7395,
+    "Grabby": 0.371875,
+    "Ada": 0.5,
+    "Turtle": 0.357625,
+    "Daredevil": 0.397,
+    "Nash": 0.248,
+    "Saver": 0.358375,
+    "Sage": 0.04925
+   },
+   "Turtle": {
+    "Rando": 0.85625,
+    "Grabby": 0.530375,
+    "Ada": 0.65275,
+    "Turtle": 0.5,
+    "Daredevil": 0.567625,
+    "Nash": 0.19,
+    "Saver": 0.515875,
+    "Sage": 0.007
+   },
+   "Daredevil": {
+    "Rando": 0.83025,
+    "Grabby": 0.482625,
+    "Ada": 0.629625,
+    "Turtle": 0.444,
+    "Daredevil": 0.5,
+    "Nash": 0.199875,
+    "Saver": 0.462875,
+    "Sage": 0.009125
+   },
+   "Nash": {
+    "Rando": 0.688375,
+    "Grabby": 0.824125,
+    "Ada": 0.753125,
+    "Turtle": 0.811,
+    "Daredevil": 0.792625,
+    "Nash": 0.5,
+    "Saver": 0.81375,
+    "Sage": 0.616
+   },
+   "Saver": {
+    "Rando": 0.859625,
+    "Grabby": 0.505,
+    "Ada": 0.63575,
+    "Turtle": 0.467875,
+    "Daredevil": 0.538875,
+    "Nash": 0.17825,
+    "Saver": 0.5,
+    "Sage": 0.002875
+   },
+   "Sage": {
+    "Rando": 0.7595,
+    "Grabby": 0.995625,
+    "Ada": 0.956375,
+    "Turtle": 0.995625,
+    "Daredevil": 0.991125,
+    "Nash": 0.377875,
+    "Saver": 0.995875,
+    "Sage": 0.5
+   }
+  }
+ },
+ "flank": {
+  "title": "Flank",
+  "names": [
+   "Rando",
+   "Grabby",
+   "Ada",
+   "Turtle",
+   "Cornerist",
+   "Sage"
+  ],
+  "size": 2,
+  "N": 1000,
+  "M": {
+   "Rando": {
+    "Rando": 0.5,
+    "Grabby": 0.0005,
+    "Ada": 0,
+    "Turtle": 0,
+    "Cornerist": 0.0005,
+    "Sage": 0
+   },
+   "Grabby": {
+    "Rando": 0.9995,
+    "Grabby": 0.5,
+    "Ada": 0.136,
+    "Turtle": 0.2505,
+    "Cornerist": 0.4785,
+    "Sage": 0.257
+   },
+   "Ada": {
+    "Rando": 1,
+    "Grabby": 0.8535,
+    "Ada": 0.5,
+    "Turtle": 0.57,
+    "Cornerist": 0.571,
+    "Sage": 0.7885
+   },
+   "Turtle": {
+    "Rando": 1,
+    "Grabby": 0.7395,
+    "Ada": 0.4135,
+    "Turtle": 0.5,
+    "Cornerist": 0.555,
+    "Sage": 0.6675
+   },
+   "Cornerist": {
+    "Rando": 0.999,
+    "Grabby": 0.537,
+    "Ada": 0.437,
+    "Turtle": 0.4455,
+    "Cornerist": 0.5,
+    "Sage": 0.4815
+   },
+   "Sage": {
+    "Rando": 0.999,
+    "Grabby": 0.757,
+    "Ada": 0.2225,
+    "Turtle": 0.347,
+    "Cornerist": 0.4965,
+    "Sage": 0.5
+   }
+  }
+ },
+ "rr": {
+  "title": "Round Robin",
+  "names": [
+   "Rando",
+   "Grabby",
+   "Ada",
+   "Turtle",
+   "Trumper",
+   "Sage"
+  ],
+  "size": 4,
+  "N": 800,
+  "M": {
+   "Rando": {
+    "Rando": 0.25,
+    "Grabby": 0.14625,
+    "Ada": 0.009791666666666666,
+    "Turtle": 0.15197916666666664,
+    "Trumper": 0.015416666666666665,
+    "Sage": 0.01625
+   },
+   "Grabby": {
+    "Rando": 0.3617708333333334,
+    "Grabby": 0.25,
+    "Ada": 0.016145833333333335,
+    "Turtle": 0.25312500000000004,
+    "Trumper": 0.0253125,
+    "Sage": 0.006875
+   },
+   "Ada": {
+    "Rando": 0.8214583333333333,
+    "Grabby": 0.7528125,
+    "Ada": 0.25,
+    "Turtle": 0.6921875,
+    "Trumper": 0.215625,
+    "Sage": 0.23052083333333337
+   },
+   "Turtle": {
+    "Rando": 0.32520833333333327,
+    "Grabby": 0.3147916666666667,
+    "Ada": 0.05229166666666667,
+    "Turtle": 0.25,
+    "Trumper": 0.05427083333333333,
+    "Sage": 0.04208333333333334
+   },
+   "Trumper": {
+    "Rando": 0.7925,
+    "Grabby": 0.7166666666666667,
+    "Ada": 0.2576041666666667,
+    "Turtle": 0.6725,
+    "Trumper": 0.25,
+    "Sage": 0.23052083333333337
+   },
+   "Sage": {
+    "Rando": 0.8617708333333333,
+    "Grabby": 0.8645833333333335,
+    "Ada": 0.24427083333333333,
+    "Turtle": 0.7236458333333333,
+    "Trumper": 0.21916666666666668,
+    "Sage": 0.25
+   }
+  }
+ },
+ "streak2": {
+  "title": "Streak, 1 bot",
+  "names": [
+   "Rando",
+   "Timid",
+   "Ada",
+   "Daredevil",
+   "Hoarder",
+   "Spender",
+   "Sage"
+  ],
+  "size": 2,
+  "N": 4000,
+  "M": {
+   "Rando": {
+    "Rando": 0.5,
+    "Timid": 0.282,
+    "Ada": 0.03125,
+    "Daredevil": 0.823,
+    "Hoarder": 0.182375,
+    "Spender": 0,
+    "Sage": 0
+   },
+   "Timid": {
+    "Rando": 0.716125,
+    "Timid": 0.5,
+    "Ada": 0.049,
+    "Daredevil": 0.86625,
+    "Hoarder": 0.277125,
+    "Spender": 0.00025,
+    "Sage": 0
+   },
+   "Ada": {
+    "Rando": 0.961125,
+    "Timid": 0.94425,
+    "Ada": 0.5,
+    "Daredevil": 0.928625,
+    "Hoarder": 0.857875,
+    "Spender": 0.342625,
+    "Sage": 0.34775
+   },
+   "Daredevil": {
+    "Rando": 0.183625,
+    "Timid": 0.136125,
+    "Ada": 0.06925,
+    "Daredevil": 0.5,
+    "Hoarder": 0.127625,
+    "Spender": 0.021625,
+    "Sage": 0.021125
+   },
+   "Hoarder": {
+    "Rando": 0.816625,
+    "Timid": 0.714,
+    "Ada": 0.136875,
+    "Daredevil": 0.86725,
+    "Hoarder": 0.5,
+    "Spender": 0.009125,
+    "Sage": 0.009375
+   },
+   "Spender": {
+    "Rando": 0.99925,
+    "Timid": 1,
+    "Ada": 0.6385,
+    "Daredevil": 0.978625,
+    "Hoarder": 0.990625,
+    "Spender": 0.5,
+    "Sage": 0.473
+   },
+   "Sage": {
+    "Rando": 1,
+    "Timid": 1,
+    "Ada": 0.63975,
+    "Daredevil": 0.979875,
+    "Hoarder": 0.99175,
+    "Spender": 0.540625,
+    "Sage": 0.5
+   }
+  }
+ },
+ "streak4": {
+  "title": "Streak, 3 bots",
+  "names": [
+   "Rando",
+   "Timid",
+   "Ada",
+   "Daredevil",
+   "Hoarder",
+   "Spender",
+   "Sage"
+  ],
+  "size": 4,
+  "N": 2000,
+  "M": {
+   "Rando": {
+    "Rando": 0.25,
+    "Timid": 0.15279166666666666,
+    "Ada": 0.009208333333333332,
+    "Daredevil": 0.567625,
+    "Hoarder": 0.06991666666666667,
+    "Spender": 0.001375,
+    "Sage": 0.00125
+   },
+   "Timid": {
+    "Rando": 0.40654166666666686,
+    "Timid": 0.25,
+    "Ada": 0.0105,
+    "Daredevil": 0.619875,
+    "Hoarder": 0.07633333333333334,
+    "Spender": 0,
+    "Sage": 0
+   },
+   "Ada": {
+    "Rando": 0.826708333333333,
+    "Timid": 0.8114166666666667,
+    "Ada": 0.25,
+    "Daredevil": 0.726,
+    "Hoarder": 0.5855,
+    "Spender": 0.28587499999999993,
+    "Sage": 0.23516666666666663
+   },
+   "Daredevil": {
+    "Rando": 0.11108333333333335,
+    "Timid": 0.090875,
+    "Ada": 0.02791666666666667,
+    "Daredevil": 0.25,
+    "Hoarder": 0.059833333333333336,
+    "Spender": 0.021083333333333336,
+    "Sage": 0.02375
+   },
+   "Hoarder": {
+    "Rando": 0.5621666666666667,
+    "Timid": 0.524166666666667,
+    "Ada": 0.047499999999999994,
+    "Daredevil": 0.611875,
+    "Hoarder": 0.25,
+    "Spender": 0.016,
+    "Sage": 0.007166666666666666
+   },
+   "Spender": {
+    "Rando": 0.9935,
+    "Timid": 0.999,
+    "Ada": 0.26583333333333325,
+    "Daredevil": 0.8735,
+    "Hoarder": 0.8389166666666666,
+    "Spender": 0.25,
+    "Sage": 0.16091666666666662
+   },
+   "Sage": {
+    "Rando": 0.9895,
+    "Timid": 0.99975,
+    "Ada": 0.31825,
+    "Daredevil": 0.872,
+    "Hoarder": 0.8527083333333333,
+    "Spender": 0.3766250000000002,
+    "Sage": 0.25
+   }
+  }
+ },
+ "classic2": {
+  "title": "Classic, 1 bot",
+  "names": [
+   "Rando",
+   "Ada",
+   "Grabby",
+   "Dumper",
+   "Blocker"
+  ],
+  "size": 2,
+  "N": 4000,
+  "M": {
+   "Rando": {
+    "Rando": 0.5,
+    "Ada": 0.06775,
+    "Grabby": 0.0635,
+    "Dumper": 0.46575,
+    "Blocker": 0.47825
+   },
+   "Ada": {
+    "Rando": 0.93575,
+    "Ada": 0.5,
+    "Grabby": 0.530125,
+    "Dumper": 0.907,
+    "Blocker": 0.903125
+   },
+   "Grabby": {
+    "Rando": 0.926625,
+    "Ada": 0.465125,
+    "Grabby": 0.5,
+    "Dumper": 0.909,
+    "Blocker": 0.9115
+   },
+   "Dumper": {
+    "Rando": 0.54375,
+    "Ada": 0.08975,
+    "Grabby": 0.088625,
+    "Dumper": 0.5,
+    "Blocker": 0.4975
+   },
+   "Blocker": {
+    "Rando": 0.53325,
+    "Ada": 0.092,
+    "Grabby": 0.09225,
+    "Dumper": 0.512,
+    "Blocker": 0.5
+   }
+  }
+ },
+ "classic4": {
+  "title": "Classic, 3 bots",
+  "names": [
+   "Rando",
+   "Ada",
+   "Grabby",
+   "Dumper",
+   "Blocker"
+  ],
+  "size": 4,
+  "N": 2000,
+  "M": {
+   "Rando": {
+    "Rando": 0.25,
+    "Ada": 0.008125,
+    "Grabby": 0.009125,
+    "Dumper": 0.234,
+    "Blocker": 0.252
+   },
+   "Ada": {
+    "Rando": 0.3475,
+    "Ada": 0.25,
+    "Grabby": 0.263375,
+    "Dumper": 0.32,
+    "Blocker": 0.3325
+   },
+   "Grabby": {
+    "Rando": 0.3705,
+    "Ada": 0.252125,
+    "Grabby": 0.25,
+    "Dumper": 0.32,
+    "Blocker": 0.3265
+   },
+   "Dumper": {
+    "Rando": 0.2435,
+    "Ada": 0.012125,
+    "Grabby": 0.007125,
+    "Dumper": 0.25,
+    "Blocker": 0.254
+   },
+   "Blocker": {
+    "Rando": 0.2525,
+    "Ada": 0.012,
+    "Grabby": 0.01075,
+    "Dumper": 0.2485,
+    "Blocker": 0.25
+   }
+  }
+ }
+}
