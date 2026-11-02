@@ -82,6 +82,19 @@ button { font: inherit; color: inherit; }
   padding: 8px 16px; font-weight: 700; cursor: pointer; font-size: 14px;
 }
 .btn.ghost { background: none; color: var(--ink); border: 1px solid var(--line); }
+.lineup { flex: 1 0 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; font-size: 13px; color: var(--muted); }
+.lineup label { display: inline-flex; align-items: center; gap: 6px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.lineup select {
+  appearance: none; -webkit-appearance: none; font: inherit; font-size: 14px; font-weight: 700; color: var(--ink);
+  background: var(--rail) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239cb3ad'/%3E%3C/svg%3E") no-repeat right 12px center;
+  border: 1px solid var(--line); border-radius: 999px; padding: 6px 30px 6px 14px; cursor: pointer;
+}
+.lineup select:hover, .lineup select:focus-visible { border-color: var(--brass); outline: none; }
+.cast { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 14px; }
+.cast b { color: var(--ink); }
+.cast .lvl { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brass); margin-left: 6px; }
+.cast span.t { display: block; color: var(--muted); font-size: 13px; }
 .btn:disabled { opacity: 0.4; cursor: default; }
 
 /* felt */
@@ -294,6 +307,7 @@ button { font: inherit; color: inherit; }
       </div>
       <button type="button" class="btn ghost" id="new-game">New game</button>
     </div>
+    <div class="lineup" id="lineup" role="group" aria-label="Choose your opponents"></div>
   </header>
 
   <main class="table" id="stage" aria-live="polite"></main>
@@ -303,6 +317,10 @@ button { font: inherit; color: inherit; }
       <h3 id="rules-title">How to play</h3>
       <div id="rules"></div>
       <div class="legend-marks"><span><b style="color:var(--good)">▲</b> beats</span><span><b>=</b> matches</span><span><b style="color:var(--bad)">✕</b> loses</span></div>
+    </div>
+    <div class="panel">
+      <h3 id="cast-title">Your opponent</h3>
+      <ul class="cast" id="cast"></ul>
     </div>
     <div class="panel">
       <h3>Who beats whom</h3>
@@ -341,7 +359,6 @@ button { font: inherit; color: inherit; }
   const FILTER = ["grayscale(1)", "", "hue-rotate(-50deg) saturate(2.2)", "hue-rotate(100deg) brightness(0.78)", "hue-rotate(226deg) saturate(1) brightness(0.8)"];
   const B = [[0,0,1,1,0],[1,0,0,0,1],[0,1,0,1,0],[0,1,0,0,1],[1,0,1,0,0]];
   const VERB = { "0>2": "crushes", "0>3": "crushes", "1>0": "covers", "1>4": "disproves", "2>1": "cut", "2>3": "decapitate", "3>1": "eats", "3>4": "poisons", "4>2": "smashes", "4>0": "vaporizes" };
-  const BOTS = ["Ada", "Bram", "Cleo"];
 
   const rel = (x, y) => x === y ? 0 : B[x][y] ? 1 : -1;
   const FULL = [];
@@ -368,12 +385,12 @@ button { font: inherit; color: inherit; }
   const say = h => { logItems.unshift(h); logItems.length = Math.min(logItems.length, 40); renderLog(); };
   const mini = id => `<span class="mini">${KEY[id]}</span>`;
 
-  let gid = "showdown", opponents = 1, score = {};
+  let gid = "showdown", opponents = 1, score = {}, picks = {};
   try {
     const saved = JSON.parse(localStorage.getItem("rps5-table") || "null");
-    if (saved) { gid = saved.gid || gid; opponents = saved.opponents || 1; score = saved.score || {}; }
+    if (saved) { gid = saved.gid || gid; opponents = saved.opponents || 1; score = saved.score || {}; picks = saved.picks || {}; }
   } catch (_) {}
-  const persist = () => { try { localStorage.setItem("rps5-table", JSON.stringify({ gid, opponents, score })); } catch (_) {} };
+  const persist = () => { try { localStorage.setItem("rps5-table", JSON.stringify({ gid, opponents, score, picks })); } catch (_) {} };
 
   let over = false;
   function endGame(won, title, sub) {
@@ -427,28 +444,61 @@ button { font: inherit; color: inherit; }
   let G = null, st = null;
   const draw = () => { $("stage").innerHTML = G.render(); };
 
+  // ── Opponents ────────────────────────────────────────────────────────────
+  // Each game has a cast of personalities, { Key: { level, trait, play } }, ordered easiest first.
+  // picks[gid] holds the chosen key for each bot seat; a game copies lineup() into st.cast when it starts.
+  const LEVELS = ["Easy", "Medium", "Hard"];
+  const seatsFor = k => GAMES[k].players ? opponents : GAMES[k].seats;
+  function lineup() {
+    const chosen = picks[gid] || [], seen = {};
+    return Array.from({ length: seatsFor(gid) }, (_, i) => chosen[i] in G.cast ? chosen[i] : "Ada").map(key => {
+      seen[key] = (seen[key] || 0) + 1;
+      return { key, name: seen[key] > 1 ? `${key} ${seen[key]}` : key };
+    });
+  }
+  const sampleBy = (xs, w) => { let r = Math.random() * sum(w); for (let i = 0; i < xs.length; i++) { r -= w[i]; if (r <= 0) return xs[i]; } return xs[xs.length - 1]; };
+
   // ══ 1. Showdown ══════════════════════════════════════════════════════════
   {
     const W = [3, 2, 1], POS = ["Top", "Middle", "Bottom"];
     const val = (a, b) => sum(W.map((w, i) => w * rel(FULL[a][i], FULL[b][i])));
-    // The bot reads your open hand and leans toward cards that beat most of it, with enough mixing to stay unpredictable.
-    function botPick() {
-      const mine = st.hands[1], yours = st.hands[0];
-      const ev = mine.map(c => sum(yours.map(y => Math.sign(val(c, y)))) / yours.length);
-      const w = ev.map(e => Math.exp(2.5 * e)), tot = sum(w);
-      let r = Math.random() * tot;
-      for (let i = 0; i < mine.length; i++) { r -= w[i]; if (r <= 0) return mine[i]; }
-      return mine[mine.length - 1];
+    const them = () => st.cast[0].name;
+    // Share of the other hand a card beats, from -1 to 1.
+    const ev = (c, opp) => sum(opp.map(o => Math.sign(val(c, o)))) / opp.length;
+    // Ada's pick: leans toward cards that beat most of the other hand, with enough mixing to stay unpredictable.
+    const adaWeights = (mine, opp) => mine.map(c => Math.exp(2.5 * ev(c, opp)));
+    // The round's equilibrium mix (payoff = who wins the round), by fictitious play.
+    function nashMix(mine, opp) {
+      const M = mine.map(a => opp.map(b => Math.sign(val(a, b)))), ca = mine.map(() => 0), ua = mine.map(() => 0), ub = opp.map(() => 0);
+      let ia = 0, ib = 0;
+      for (let t = 0; t < 400; t++) {
+        ca[ia]++;
+        mine.forEach((_, i) => { ua[i] += M[i][ib]; }); opp.forEach((_, j) => { ub[j] -= M[ia][j]; });
+        ia = ua.indexOf(Math.max(...ua)); ib = ub.indexOf(Math.max(...ub));
+      }
+      return ca;
     }
+    // How useful a card is in general: average round result against the whole deck.
+    const GENERIC = IDS.map(c => ev(c, IDS));
+    const CAST = {
+      Rando: { level: 0, trait: "Plays a card at random.", play: me => pick(me) },
+      Ada: { level: 1, trait: "Leans toward cards that beat most of your hand, with some randomness.", play: (me, opp) => sampleBy(me, adaWeights(me, opp)) },
+      Grabby: { level: 1, trait: "Always plays the card that beats most of your hand.", play: (me, opp) => argmax(me, c => ev(c, opp)) },
+      Daredevil: { level: 1, trait: "Goes for the biggest points margin, not just the win.", play: (me, opp) => argmax(me, c => sum(opp.map(o => val(c, o)))) },
+      Turtle: { level: 1, trait: "Plays the card whose worst case against your hand is least bad.", play: (me, opp) => argmax(me, c => 10 * Math.min(...opp.map(o => Math.sign(val(c, o)))) + ev(c, opp)) },
+      Saver: { level: 1, trait: "Spends weak cards on small stakes and saves strong ones for a pot.", play: (me, opp, s) => argmax(me, c => ev(c, opp) - (s.pot ? 0 : 0.6 * GENERIC[c])) },
+      Nash: { level: 2, trait: "Mixes its picks so they can't be read or exploited.", play: (me, opp) => sampleBy(me, nashMix(me, opp)) },
+      Sage: { level: 2, trait: "Predicts which card you'll play and counters it.", play: (me, opp) => { const q = adaWeights(opp, me), t = sum(q); return argmax(me, c => sum(opp.map((o, j) => q[j] / t * Math.sign(val(c, o))))); } },
+    };
     function play(me) {
       if (st.done || !st.hands[0].includes(me)) return;
-      const bot = botPick();
+      const bot = CAST[st.cast[0].key].play(st.hands[1], st.hands[0], { pot: st.pot });
       st.hands[0] = without(st.hands[0], me); st.hands[1] = without(st.hands[1], bot);
       const pts = W.map((w, i) => w * rel(FULL[me][i], FULL[bot][i]));
       const v = sum(pts), stake = 2 + st.pot;
       let result;
       if (v > 0) { st.won[0] += stake; st.pot = 0; result = "you"; say(`You took ${plural(stake, "card")}: ${mini(me)} over ${mini(bot)}.`); }
-      else if (v < 0) { st.won[1] += stake; st.pot = 0; result = "them"; say(`Ada took ${plural(stake, "card")}: ${mini(bot)} over ${mini(me)}.`); }
+      else if (v < 0) { st.won[1] += stake; st.pot = 0; result = "them"; say(`${them()} took ${plural(stake, "card")}: ${mini(bot)} over ${mini(me)}.`); }
       else { st.pot += 2; result = "tie"; say(`${mini(me)} and ${mini(bot)} tied. Pot is ${st.pot}.`); }
       st.last = { me, bot, pts, result };
       st.round++;
@@ -456,22 +506,22 @@ button { font: inherit; color: inherit; }
       if (!st.hands[0].length) {
         st.done = true;
         const [y, a] = st.won;
-        endGame(y > a ? true : y < a ? false : null, y > a ? "You win Showdown." : y < a ? "Ada wins Showdown." : "Showdown is a draw.", `Cards won: you ${y}, Ada ${a}.`);
+        endGame(y > a ? true : y < a ? false : null, y > a ? "You win Showdown." : y < a ? `${them()} wins Showdown.` : "Showdown is a draw.", `Cards won: you ${y}, ${them()} ${a}.`);
       }
       draw();
     }
     GAMES.showdown = {
-      name: "Showdown", players: null,
+      name: "Showdown", players: null, seats: 1, cast: CAST,
       blurb: "Both hands are open. You both pick in secret, then reveal.",
       rules: `<ol class="rules">
-        <li>Both hands are <b>face up</b>. Each round you and Ada pick a card in secret, then reveal.</li>
+        <li>Both hands are <b>face up</b>. Each round you and your opponent pick a card in secret, then reveal.</li>
         <li>Compare position by position. Top glyph is worth <b>3</b>, middle <b>2</b>, bottom <b>1</b>. Win a position, score its value.</li>
         <li>The higher total takes both cards. A tie puts them in the <b>pot</b> for the next winner.</li>
         <li>Both draw 1. When every card is played, most cards won wins.</li></ol>`,
       start() {
         const d = shuffle(IDS);
-        st = { deck: d.slice(10), hands: [d.slice(0, 5), d.slice(5, 10)], won: [0, 0], pot: 0, last: null, round: 1, done: false };
-        say("Showdown: new deal. Read Ada's hand, then pick a card.");
+        st = { deck: d.slice(10), hands: [d.slice(0, 5), d.slice(5, 10)], won: [0, 0], pot: 0, last: null, round: 1, done: false, cast: lineup() };
+        say(`Showdown: new deal against ${them()}. Read their hand, then pick a card.`);
       },
       resume() {},
       click(e) { const b = e.target.closest("#sd-hand [data-id]"); if (b) play(+b.dataset.id); },
@@ -481,22 +531,22 @@ button { font: inherit; color: inherit; }
         let arena;
         if (L) {
           const rows = L.pts.map((p, i) => `<div class="tally-row"><span class="w">${POS[i]} ×${W[i]}</span>${
-            p > 0 ? `<span class="you">+${p} you</span>` : p < 0 ? `<span class="them">+${-p} Ada</span>` : `<span class="none">tie</span>`}</div>`).join("");
+            p > 0 ? `<span class="you">+${p} you</span>` : p < 0 ? `<span class="them">+${-p} ${them()}</span>` : `<span class="none">tie</span>`}</div>`).join("");
           const y = sum(L.pts.filter(p => p > 0)), a = -sum(L.pts.filter(p => p < 0));
-          const verdict = L.result === "you" ? "You take it" : L.result === "them" ? "Ada takes it" : "Tie: to the pot";
-          arena = `<div class="pile"><div class="big-slot">${cardHTML(L.bot, { against: L.me, cls: "fresh" + (L.result === "you" ? " lost" : "") })}</div><span class="pile-label">Ada played</span></div>
+          const verdict = L.result === "you" ? "You take it" : L.result === "them" ? `${them()} takes it` : "Tie: to the pot";
+          arena = `<div class="pile"><div class="big-slot">${cardHTML(L.bot, { against: L.me, cls: "fresh" + (L.result === "you" ? " lost" : "") })}</div><span class="pile-label">${them()} played</span></div>
             <div class="tally">${rows}<div class="tally-total">${y} – ${a}<br><span style="font-size:16px;color:var(--muted)">${verdict}</span></div></div>
             <div class="pile"><div class="big-slot">${cardHTML(L.me, { against: L.bot, cls: "fresh" + (L.result === "them" ? " lost" : "") })}</div><span class="pile-label">You played</span></div>`;
         } else {
-          arena = `<div class="pile"><div class="big-slot"><div class="empty-slot">?</div></div><span class="pile-label">Ada</span></div>
+          arena = `<div class="pile"><div class="big-slot"><div class="empty-slot">?</div></div><span class="pile-label">${them()}</span></div>
             <div class="pile"><div class="big-slot"><div class="empty-slot">?</div></div><span class="pile-label">You</span></div>`;
         }
         const yours = st.hands[0].map(c => {
           const n = st.hands[1].filter(o => val(c, o) > 0).length;
-          return slot(cardHTML(c, { button: true, cls: st.done ? "" : "legal", disabled: st.done, note: `beats ${n} of Ada's cards` }), `beats ${n}/${st.hands[1].length}`, n === 0);
+          return slot(cardHTML(c, { button: true, cls: st.done ? "" : "legal", disabled: st.done, note: `beats ${n} of ${them()}'s cards` }), `beats ${n}/${st.hands[1].length}`, n === 0);
         }).join("");
         return `<p class="blurb">${GAMES.showdown.blurb}</p>
-          <section class="opp"><div class="opp-head"><span class="opp-name">Ada's hand</span><span class="opp-meta">won <b>${st.won[1]}</b></span></div>
+          <section class="opp"><div class="opp-head"><span class="opp-name">${them()}'s hand</span><span class="opp-meta">won <b>${st.won[1]}</b></span></div>
             <div class="hand small">${opp}</div></section>
           <section class="duel">${arena}</section>
           <div class="counter"><span>Round <b>${Math.min(st.round, 30)}</b> of 30</span><span>Draw pile <b>${st.deck.length}</b></span><span>Pot <b>${st.pot}</b></span></div>
@@ -528,12 +578,42 @@ button { font: inherit; color: inherit; }
     };
     const owned = (bd, p) => bd.filter(x => x && x.owner === p).length;
     const empties = bd => bd.map((x, k) => x ? -1 : k).filter(k => k >= 0);
+    const them = () => st.cast[0].name;
+    const moves = s => s.hand.flatMap(c => empties(s.board).map(i => [c, i]));
+    const captures = (bd, c, i) => attacks(bd, c, i, 1).length;
+    const shelter = i => { const r = i / N | 0, c = i % N, edges = (r === 0 || r === N - 1) + (c === 0 || c === N - 1); return edges; };
+    // Average over sampled cards of the most a single reply could take back.
+    const bestReply = (bd, pool) => { const emp = empties(bd); if (!emp.length) return 0;
+      return sum(pool.map(oc => Math.max(...emp.map(j => attacks(bd, oc, j, 0).length)))) / pool.length; };
+    const CAST = {
+      Rando: { level: 0, trait: "Plays any card on any square.", play: s => pick(moves(s)) },
+      Grabby: { level: 0, trait: "Takes the biggest capture every time.", play: s => argmax(moves(s), ([c, i]) => captures(s.board, c, i)) },
+      Cornerist: { level: 1, trait: "Grabs captures, but loves corners and edges.", play: s => argmax(moves(s), ([c, i]) => captures(s.board, c, i) + 0.6 * shelter(i)) },
+      Sage: { level: 1, trait: "Plays for the best net result after your strongest reply.", play: s => {
+        const pools = [0, 1, 2].map(() => shuffle(s.unseen).slice(0, s.oppHand));
+        return argmax(moves(s), ([c, i]) => { const [bd] = place(s.board, c, i, 1), emp = empties(bd);
+          const loss = emp.length ? sum(pools.map(pool => Math.max(...pool.flatMap(oc => emp.map(j => attacks(bd, oc, j, 0).length))))) / pools.length : 0;
+          return captures(s.board, c, i) - loss; }); } },
+      Turtle: { level: 2, trait: "Captures carefully and shelters on the edges.", play: s => {
+        const pool = shuffle(s.unseen).slice(0, 8);
+        return argmax(moves(s), ([c, i]) => captures(s.board, c, i) - 1.2 * bestReply(place(s.board, c, i, 1)[0], pool) + 0.3 * shelter(i)); } },
+      // Greedy captures, minus how badly a likely reply could hit back from every open square.
+      Ada: { level: 2, trait: "Captures, but avoids leaving squares you can hit back from.", play: s => {
+        const pool = shuffle(s.unseen).slice(0, 8);
+        return argmax(moves(s), ([c, i]) => {
+          const [bd] = place(s.board, c, i, 1), mine = owned(bd, 1), emp = empties(bd);
+          if (!emp.length) return mine;
+          let worst = 0;
+          for (const oc of pool) for (const j of emp) worst += mine - owned(place(bd, oc, j, 0)[0], 1);
+          return mine - 0.6 * worst / pool.length;
+        }); } },
+    };
 
     function startBoard(n) {
       const d = shuffle(IDS);
       Object.assign(st, { board: Array(N * N).fill(null), hands: [d.slice(0, 5), d.slice(5, 10)], deck: d.slice(10),
         boardNo: n, turn: n === 1 ? 0 : 1, sel: null, flips: [], lastPlaced: -1, between: false });
-      say(`Board ${n}: ${st.turn === 0 ? "you start" : "Ada starts"}.`);
+      say(`Board ${n}: ${st.turn === 0 ? "you start" : `${them()} starts`}.`);
       if (st.turn === 1) later(botMove, 900);
     }
     function doPlace(p, id, i) {
@@ -541,7 +621,7 @@ button { font: inherit; color: inherit; }
       st.board = bd; st.flips = flips; st.lastPlaced = i; st.sel = null;
       st.hands[p] = without(st.hands[p], id);
       if (st.deck.length) st.hands[p].push(st.deck.shift());
-      say(`${p === 0 ? "You" : "Ada"} placed ${mini(id)}${flips.length ? `, capturing ${flips.length}` : ""}.`);
+      say(`${p === 0 ? "You" : them()} placed ${mini(id)}${flips.length ? `, capturing ${flips.length}` : ""}.`);
       st.turn ^= 1;
       if (!empties(st.board).length) boardOver();
       else if (st.turn === 1) later(botMove, 900);
@@ -556,26 +636,17 @@ button { font: inherit; color: inherit; }
       const ty = st.totals[0][0] + st.totals[1][0], ta = st.totals[0][1] + st.totals[1][1];
       let won = ty > ta ? true : ty < ta ? false : (y > a ? true : y < a ? false : null);
       const how = ty === ta && won !== null ? " Tied overall, so board 2 decides." : "";
-      endGame(won, won === true ? "You win Flank." : won === false ? "Ada wins Flank." : "Flank is a draw.", `Total cards: you ${ty}, Ada ${ta}.${how}`);
+      endGame(won, won === true ? "You win Flank." : won === false ? `${them()} wins Flank.` : "Flank is a draw.", `Total cards: you ${ty}, ${them()} ${ta}.${how}`);
     }
-    // Ada: greedy captures, minus how badly a likely reply could hit back.
     function botMove() {
       if (st.turn !== 1 || st.done || st.between) return;
       const used = new Set([...st.hands[1], ...st.board.filter(Boolean).map(x => x.id)]);
-      const pool = shuffle(IDS.filter(c => !used.has(c))).slice(0, 8);
-      const moves = st.hands[1].flatMap(c => empties(st.board).map(i => [c, i]));
-      const best = argmax(moves, ([c, i]) => {
-        const [bd] = place(st.board, c, i, 1), mine = owned(bd, 1), emp = empties(bd);
-        if (!emp.length) return mine;
-        let worst = 0;
-        for (const oc of pool) for (const j of emp) worst += mine - owned(place(bd, oc, j, 0)[0], 1);
-        return mine - 0.6 * worst / pool.length;
-      });
+      const best = CAST[st.cast[0].key].play({ board: st.board, hand: st.hands[1], unseen: IDS.filter(c => !used.has(c)), oppHand: st.hands[0].length });
       doPlace(1, best[0], best[1]);
     }
     GAMES.flank = {
-      name: "Flank", players: null,
-      blurb: "Place cards on a 4×4 grid and capture Ada's neighbours. Two boards make a match.",
+      name: "Flank", players: null, seats: 1, cast: CAST,
+      blurb: "Place cards on a 4×4 grid and capture your opponent's neighbours. Two boards make a match.",
       rules: `<ol class="rules">
         <li>Take turns placing a card from your hand on an empty square, then draw 1.</li>
         <li><b>Side by side</b>, the three rows line up: you capture if you win more rows than you lose.</li>
@@ -583,7 +654,7 @@ button { font: inherit; color: inherit; }
         <li>Captured cards change colour and can be taken back. When the grid is full, count your cards.</li>
         <li>A match is <b>two boards</b>, each player starting one. Most cards in total wins; if tied, board 2 decides.</li></ol>`,
       start() {
-        st = { totals: [[0, 0], [0, 0]], done: false };
+        st = { totals: [[0, 0], [0, 0]], done: false, cast: lineup() };
         startBoard(1);
       },
       resume() { if (!st.done && !st.between && st.turn === 1) later(botMove, 600); },
@@ -610,17 +681,17 @@ button { font: inherit; color: inherit; }
         const y = owned(st.board, 0), a = owned(st.board, 1);
         let status;
         if (st.done) status = `<strong>Match over.</strong>`;
-        else if (st.between) status = `<strong>Board 1 ends ${st.totals[0][0]}–${st.totals[0][1]}.</strong> Ada starts board 2. <button type="button" class="btn" id="fl-next">Start board 2</button>`;
+        else if (st.between) status = `<strong>Board 1 ends ${st.totals[0][0]}–${st.totals[0][1]}.</strong> ${them()} starts board 2. <button type="button" class="btn" id="fl-next">Start board 2</button>`;
         else if (myTurn) status = st.sel == null ? `<strong>Your turn.</strong> Pick a card from your hand.` : `<strong>Your turn.</strong> Pick a square. The number is how many cards it captures.`;
-        else status = `Ada is thinking…`;
+        else status = `${them()} is thinking…`;
         const hand = st.hands[0].map(c => slot(cardHTML(c, { button: true, cls: myTurn ? (st.sel === c ? "sel" : "legal") : "", disabled: !myTurn }))).join("");
         const prior = st.boardNo === 2 ? ` · Board 1: ${st.totals[0][0]}–${st.totals[0][1]}` : "";
         return `<p class="blurb">${GAMES.flank.blurb}</p>
-          <div class="counter"><span>Board <b>${st.boardNo}</b> of 2</span><span>You <b>${y}</b> · Ada <b>${a}</b>${prior}</span><span>Ada holds <b>${st.hands[1].length}</b></span></div>
+          <div class="counter"><span>Board <b>${st.boardNo}</b> of 2</span><span>You <b>${y}</b> · ${them()} <b>${a}</b>${prior}</span><span>${them()} holds <b>${st.hands[1].length}</b></span></div>
           <div class="board">${cells}</div>
           <p class="status">${status}</p>
           <section class="you ${myTurn ? "turn" : ""}"><div class="you-head"><h2>Your hand</h2>
-            <div class="legend-own"><span><i style="background:var(--brass)"></i>yours</span><span><i style="background:var(--them)"></i>Ada's</span></div></div>
+            <div class="legend-own"><span><i style="background:var(--brass)"></i>yours</span><span><i style="background:var(--them)"></i>${them()}'s</span></div></div>
             <div class="hand" id="fl-hand">${hand}</div></section>`;
       },
     };
@@ -628,7 +699,7 @@ button { font: inherit; color: inherit; }
 
   // ══ 3. Round Robin ═══════════════════════════════════════════════════════
   {
-    const NAMES = ["You", ...BOTS], HANDS = 4;
+    const HANDS = 4;
     // Each card in the trick is compared with every other; most head-to-head wins takes it, earliest card breaks ties.
     function judge(trick) {
       const wins = trick.map(x => trick.filter(y => y !== x && lex(x.id, y.id) > 0).length);
@@ -636,26 +707,59 @@ button { font: inherit; color: inherit; }
       wins.forEach((w, k) => { if (w > wins[best]) best = k; });
       return { winner: trick[best].p, wins, best };
     }
-    const legalFor = p => {
-      const h = st.hands[p];
-      if (!st.trick.length) return h;
-      const f = h.filter(id => FULL[id][0] === FULL[st.trick[0].id][0]);
+    const legalIn = (h, trick) => {
+      if (!trick.length) return h;
+      const f = h.filter(id => FULL[id][0] === FULL[trick[0].id][0]);
       return f.length ? f : h;
     };
-    function botChoose(p) {
-      const legal = legalFor(p);
-      if (!st.trick.length) return argmax(legal, c => STR[c]);
-      const takes = c => judge([...st.trick, { p: -1, id: c }]).winner === -1;
-      const winners = legal.filter(takes);
-      if (winners.length) return argmax(winners, c => st.trick.length === 3 ? -STR[c] : STR[c]);
-      return argmax(legal, c => -STR[c]);
-    }
+    const legalFor = p => legalIn(st.hands[p], st.trick);
+    const takes = (trick, c) => judge([...trick, { p: -1, id: c }]).winner === -1;
+    // Ada: leads strong, wins as cheaply as it can when it plays last, otherwise throws its weakest card.
+    const adaPlay = s => {
+      if (!s.trick.length) return argmax(s.legal, c => STR[c]);
+      const winners = s.legal.filter(c => takes(s.trick, c));
+      if (winners.length) return argmax(winners, c => s.trick.length === 3 ? -STR[c] : STR[c]);
+      return argmax(s.legal, c => -STR[c]);
+    };
+    const suitLen = (hand, c) => hand.filter(x => FULL[x][0] === FULL[c][0]).length;
+    const CAST = {
+      Rando: { level: 0, trait: "Plays any legal card.", play: s => pick(s.legal) },
+      Grabby: { level: 0, trait: "Always plays its strongest card.", play: s => argmax(s.legal, c => STR[c]) },
+      Turtle: { level: 0, trait: "Only fights for a trick when it plays last.", play: s => {
+        if (s.trick.length === 3) { const w = s.legal.filter(c => takes(s.trick, c)); if (w.length) return argmax(w, c => -STR[c]); }
+        return argmax(s.legal, c => -STR[c]); } },
+      Ada: { level: 1, trait: "Leads strong, wins cheaply when it can, otherwise throws its weakest card.", play: adaPlay },
+      Trumper: { level: 1, trait: "Tries to run out of a glyph so it can trump.", play: s => {
+        if (!s.trick.length) return argmax(s.legal, c => -100 * suitLen(s.hand, c) + STR[c]);
+        const w = s.legal.filter(c => takes(s.trick, c));
+        if (w.length) return argmax(w, c => s.trick.length === 3 ? -STR[c] : STR[c]);
+        const following = FULL[s.legal[0]][0] === FULL[s.trick[0].id][0];
+        return following ? argmax(s.legal, c => -STR[c]) : argmax(s.legal, c => -100 * suitLen(s.hand, c) - STR[c]); } },
+      // Deals the unseen cards to the players still to act, lets them play like Ada, and picks the card most likely to take the trick.
+      Sage: { level: 2, trait: "Simulates the rest of the trick to find its best card.", play: s => {
+        if (s.legal.length === 1) return s.legal[0];
+        const left = 3 - s.trick.length;
+        if (!left) { const w = s.legal.filter(c => takes(s.trick, c)); return w.length ? argmax(w, c => -STR[c]) : argmax(s.legal, c => -STR[c]); }
+        const seen = new Set([...s.hand, ...s.played, ...s.trick.map(x => x.id)]);
+        const unseen = IDS.filter(c => !seen.has(c)), n = s.hand.length, T = 40;
+        const deals = Array.from({ length: T }, () => { const u = shuffle(unseen); return Array.from({ length: left }, (_, k) => u.slice(k * n, k * n + n)); });
+        return argmax(s.legal, c => {
+          let wins = 0;
+          for (const deal of deals) {
+            const tr = [...s.trick, { p: -1, id: c }];
+            deal.forEach((h, k) => tr.push({ p: k, id: adaPlay({ trick: tr.slice(), legal: legalIn(h, tr) }) }));
+            if (judge(tr).winner === -1) wins++;
+          }
+          return wins / T - 0.2 * STR[c] / 59;
+        }); } },
+    };
+    const botChoose = p => CAST[st.cast[p - 1].key].play({ legal: legalFor(p), trick: st.trick, hand: st.hands[p], played: st.played || [] });
     function deal() {
       const d = shuffle(IDS);
       st.hands = [0, 1, 2, 3].map(p => d.slice(p * 12, p * 12 + 12));
-      st.trick = []; st.tricks = [0, 0, 0, 0]; st.reveal = null; st.between = false;
+      st.trick = []; st.tricks = [0, 0, 0, 0]; st.reveal = null; st.between = false; st.played = [];
       st.lead = st.turn = (st.handNo - 1) % 4;
-      say(`Hand ${st.handNo} of ${HANDS}. ${NAMES[st.lead]} lead${st.lead === 0 ? "" : "s"}.`);
+      say(`Hand ${st.handNo} of ${HANDS}. ${st.names[st.lead]} lead${st.lead === 0 ? "" : "s"}.`);
       later(step, 600);
     }
     function playCard(p, id) {
@@ -675,27 +779,28 @@ button { font: inherit; color: inherit; }
       st.reveal = judge(st.trick);
       const w = st.reveal.winner;
       st.tricks[w]++;
-      say(`${NAMES[w]} took the trick with ${mini(st.trick[st.reveal.best].id)}.`);
+      say(`${st.names[w]} took the trick with ${mini(st.trick[st.reveal.best].id)}.`);
       draw();
       later(collect, 1700);
     }
     function collect() {
       const w = st.reveal.winner;
+      (st.played = st.played || []).push(...st.trick.map(x => x.id));
       st.reveal = null; st.trick = []; st.lead = st.turn = w;
       if (st.hands[0].length) { draw(); later(step, 400); return; }
       st.total = st.total.map((t, p) => t + st.tricks[p]);
-      say(`Hand ${st.handNo} tricks: ${NAMES.map((n, p) => `${n} ${st.tricks[p]}`).join(", ")}.`);
+      say(`Hand ${st.handNo} tricks: ${st.names.map((n, p) => `${n} ${st.tricks[p]}`).join(", ")}.`);
       if (st.handNo === HANDS) {
         st.done = true;
         const top = Math.max(...st.total), leaders = st.total.map((t, p) => t === top ? p : -1).filter(p => p >= 0);
         const won = leaders.length === 1 ? leaders[0] === 0 : leaders.includes(0) ? null : false;
-        const title = won === true ? "You win Round Robin." : won === null ? "You tie for first." : `${leaders.map(p => NAMES[p]).join(" & ")} win${leaders.length === 1 ? "s" : ""}.`;
-        endGame(won, title, "Total tricks — " + NAMES.map((n, p) => `${n}: ${st.total[p]}`).join(" · "));
+        const title = won === true ? "You win Round Robin." : won === null ? "You tie for first." : `${leaders.map(p => st.names[p]).join(" & ")} win${leaders.length === 1 ? "s" : ""}.`;
+        endGame(won, title, "Total tricks — " + st.names.map((n, p) => `${n}: ${st.total[p]}`).join(" · "));
       } else st.between = true;
       draw();
     }
     GAMES.rr = {
-      name: "Round Robin", players: null,
+      name: "Round Robin", players: null, seats: 3, cast: CAST,
       blurb: "Four-player tricks. Every card in the trick plays every other; the most wins takes it.",
       rules: `<ol class="rules">
         <li>Everyone gets 12 cards. The leader plays any card.</li>
@@ -704,7 +809,8 @@ button { font: inherit; color: inherit; }
         <li>Out of the led glyph? Play a card whose top glyph beats it, the way a trump would.</li>
         <li>Four hands. Most tricks in total wins.</li></ol>`,
       start() {
-        st = { handNo: 1, total: [0, 0, 0, 0], done: false };
+        const cast = lineup();
+        st = { handNo: 1, total: [0, 0, 0, 0], done: false, cast, names: ["You", ...cast.map(x => x.name)] };
         deal();
       },
       resume() { if (st.reveal) later(collect, 800); else if (!st.between && !st.done) later(step, 500); },
@@ -718,13 +824,13 @@ button { font: inherit; color: inherit; }
       },
       render() {
         const myTurn = !st.done && !st.reveal && !st.between && st.turn === 0 && st.trick.length < 4;
-        const opps = [1, 2, 3].map(p => oppPanel(NAMES[p], `tricks <b>${st.tricks[p]}</b> · total <b>${st.total[p]}</b>`,
+        const opps = [1, 2, 3].map(p => oppPanel(st.names[p], `tricks <b>${st.tricks[p]}</b> · total <b>${st.total[p]}</b>`,
           { turn: !st.reveal && !st.between && st.turn === p && st.trick.length < 4, count: st.hands[p].length })).join("");
         const trick = st.trick.length ? st.trick.map((x, k) => {
           const r = st.reveal;
           const cls = r ? (k === r.best ? "win-glow" : "lost") : (k === st.trick.length - 1 ? "fresh" : "");
-          return slot(cardHTML(x.id, { cls }), r ? `${NAMES[x.p]} · ${plural(r.wins[k], "win")}` : NAMES[x.p], !r || k !== r.best);
-        }).join("") : `<div class="slot"><div class="empty-slot">·</div><span class="tag dim">${NAMES[st.turn]} lead${st.turn === 0 ? "" : "s"}</span></div>`;
+          return slot(cardHTML(x.id, { cls }), r ? `${st.names[x.p]} · ${plural(r.wins[k], "win")}` : st.names[x.p], !r || k !== r.best);
+        }).join("") : `<div class="slot"><div class="empty-slot">·</div><span class="tag dim">${st.names[st.turn]} lead${st.turn === 0 ? "" : "s"}</span></div>`;
         const led = st.trick.length ? FULL[st.trick[0].id][0] : null;
         const follow = led != null ? `<div class="follow">Follow ${glyph(led, "")} <b style="color:var(--ink)">${NAME[led]}</b> on top if you can</div>` : `<div class="follow">New trick</div>`;
         const legal = myTurn ? legalFor(0) : [];
@@ -732,9 +838,9 @@ button { font: inherit; color: inherit; }
         let status;
         if (st.done) status = `<strong>Game over.</strong>`;
         else if (st.between) status = `<strong>Hand ${st.handNo} done.</strong> <button type="button" class="btn" id="rr-next">Deal hand ${st.handNo + 1}</button>`;
-        else if (st.reveal) status = `<strong>${NAMES[st.reveal.winner]} take${st.reveal.winner === 0 ? "" : "s"} it.</strong>`;
+        else if (st.reveal) status = `<strong>${st.names[st.reveal.winner]} take${st.reveal.winner === 0 ? "" : "s"} it.</strong>`;
         else if (myTurn) status = `<strong>Your turn.</strong> ${legal.length < st.hands[0].length ? "You must follow the top glyph." : st.trick.length ? "You're out of that glyph: play anything." : "Lead any card."}`;
-        else status = `${NAMES[st.turn]} is up…`;
+        else status = `${st.names[st.turn]} is up…`;
         return `<p class="blurb">${GAMES.rr.blurb}</p>
           <section class="opps">${opps}</section>
           ${follow}
@@ -795,23 +901,43 @@ button { font: inherit; color: inherit; }
         "Points — " + st.players.map(p => `${p.name}: ${p.score}`).join(" · "));
       draw();
     }
-    // Bots flip while the odds beat the cost of losing the streak, then spend a safe hand card, then bank.
+    // A policy returns "flip", "bank" or a hand card to play. s = { p, hand, L, odds(), scores, deckLeft, players }
+    const playable = s => s.hand.filter(c => ok(c, top()));
+    // The safe card that leaves the easiest card to beat next.
+    const bestFollow = (s, cs) => { const u = unseenFor(s.p); return argmax(cs, c => u.filter(x => ok(x, c)).length); };
+    const worthFlip = (s, margin = 0) => s.odds() > s.L / (s.L + 1) - margin;
+    const CAST = {
+      Rando: { level: 0, trait: "Flips or banks on a coin toss.", play: () => Math.random() < 0.5 ? "flip" : "bank" },
+      Timid: { level: 0, trait: "Banks as soon as it has 2.", play: s => s.L < 2 ? "flip" : "bank" },
+      Daredevil: { level: 0, trait: "Keeps flipping while the odds are better than 60%.", play: s => s.odds() > 0.6 ? "flip" : playable(s).length ? bestFollow(s, playable(s)) : "bank" },
+      Hoarder: { level: 0, trait: "Flips while the odds justify it, but never plays from its hand.", play: s => worthFlip(s) ? "flip" : "bank" },
+      // Flips while the odds beat the cost of losing the streak, then spends a safe hand card, then banks.
+      Ada: { level: 1, trait: "Flips while the odds justify it, then plays a hand card or banks.", play: s => {
+        if (worthFlip(s)) return "flip";
+        const pl = playable(s);
+        return pl.length && s.L >= 2 ? bestFollow(s, pl) : "bank"; } },
+      Spender: { level: 2, trait: "Plays every safe hand card first, then flips while the odds justify it.", play: s => {
+        const pl = playable(s); if (pl.length) return bestFollow(s, pl);
+        return worthFlip(s) ? "flip" : "bank"; } },
+      Sage: { level: 2, trait: "Like Spender, but pushes harder when behind late and banks earlier when well ahead.", play: s => {
+        const pl = playable(s); if (pl.length) return bestFollow(s, pl);
+        const me = s.scores[s.p] + s.L, lead = Math.max(...s.scores.filter((_, i) => i !== s.p));
+        let margin = 0;
+        if (s.deckLeft / (2.5 * s.players) < 3 && me <= lead) margin = 0.12;
+        if (me > lead + 6) margin = -0.05;
+        return worthFlip(s, margin) ? "flip" : "bank"; } },
+    };
     function botStep() {
       if (st.done || st.turn === 0 || st.bust != null) return;
       const p = st.turn, me = st.players[p], L = st.run.length;
-      if (!L) { flip(p); }
-      else if (safeOdds(p) > L / (L + 1)) flip(p);
-      else {
-        const playable = me.hand.filter(c => ok(c, top()));
-        if (playable.length && L >= 2) {
-          const u = unseenFor(p);
-          playHand(p, argmax(playable, c => u.filter(x => ok(x, c)).length));
-        } else return bank(p);
-      }
+      const a = !L ? "flip" : CAST[me.key].play({ p, hand: me.hand, L, odds: () => safeOdds(p), scores: st.players.map(q => q.score), deckLeft: st.deck.length, players: st.players.length });
+      if (a === "flip") flip(p);
+      else if (a === "bank" || !me.hand.includes(a) || !ok(a, top())) return bank(p);
+      else playHand(p, a);
       if (st.turn === p && st.bust == null && !st.done) later(botStep, 750);
     }
     GAMES.streak = {
-      name: "Streak", players: [1, 2, 3],
+      name: "Streak", players: [1, 2, 3], cast: CAST,
       blurb: "Push your luck. Every card must beat the one before it in at least one position.",
       rules: `<ol class="rules">
         <li>On your turn, <b>flip</b> the top card to start a streak.</li>
@@ -821,7 +947,8 @@ button { font: inherit; color: inherit; }
         <li>Banking scores 1 point per card. Refill to 3. When the deck runs out, most points wins.</li></ol>`,
       start() {
         const d = shuffle(IDS), n = opponents + 1;
-        st = { players: ["You", ...BOTS.slice(0, opponents)].map((name, i) => ({ name, hand: d.slice(i * 3, i * 3 + 3), score: 0 })),
+        const cast = lineup();
+        st = { players: [{ name: "You" }, ...cast].map(({ name, key }, i) => ({ name, key, hand: d.slice(i * 3, i * 3 + 3), score: 0 })), cast,
           deck: d.slice(n * 3), gone: [], run: [], bust: null, turn: 0, done: false, odds: st && st.odds || false };
         say("Streak: new game. You go first.");
       },
@@ -912,12 +1039,21 @@ button { font: inherit; color: inherit; }
       st.passes = got ? 0 : st.passes + 1;
       advance();
     }
-    function botChoice(i) {
-      const legal = st.players[i].hand.filter(c => canPlay(c, active()));
-      if (!legal.length) return null;
-      const pressure = st.players[(i + 1) % st.players.length].hand.length <= 2 ? 6 : 0;
-      return argmax(legal, c => { const pw = posWon(c, active()); return pw * 3 + (pw >= 2 ? pressure : 0) - FOLLOWERS[c] / 5 + Math.random() * 1.5; });
-    }
+    // How many possible active cards a card can be played on: low means hard to shed.
+    const SHEDDABLE = IDS.map(c => IDS.filter(a => a !== c && canPlay(c, a)).length);
+    // A policy returns a legal card, or null to draw. s = { legal, active, nextSize }
+    const CAST = {
+      Rando: { level: 0, trait: "Plays any legal card.", play: s => s.legal.length ? pick(s.legal) : null },
+      Dumper: { level: 0, trait: "Gets rid of its hardest-to-play cards first.", play: s => s.legal.length ? argmax(s.legal, c => -SHEDDABLE[c]) : null },
+      Blocker: { level: 0, trait: "Leaves the next player as little as possible to follow.", play: s => s.legal.length ? argmax(s.legal, c => -FOLLOWERS[c]) : null },
+      Ada: { level: 1, trait: "Beats as many positions as it can, hardest when the next player is nearly out.", play: s => {
+        if (!s.legal.length) return null;
+        const pressure = s.nextSize <= 2 ? 6 : 0;
+        return argmax(s.legal, c => { const pw = posWon(c, s.active); return pw * 3 + (pw >= 2 ? pressure : 0) - FOLLOWERS[c] / 5 + Math.random() * 1.5; }); } },
+      Grabby: { level: 1, trait: "Always beats as many positions as possible.", play: s => s.legal.length ? argmax(s.legal, c => posWon(c, s.active)) : null },
+    };
+    const botChoice = i => CAST[st.players[i].key].play({ legal: st.players[i].hand.filter(c => canPlay(c, active())), active: active(),
+      nextSize: st.players[(i + 1) % st.players.length].hand.length });
     function step() {
       if (st.done) return;
       if (st.passes >= st.players.length * 2) {
@@ -946,7 +1082,7 @@ button { font: inherit; color: inherit; }
       draw(); later(step, 700);
     }
     GAMES.classic = {
-      name: "Classic", players: [1, 2, 3],
+      name: "Classic", players: [1, 2, 3], cast: CAST,
       blurb: "The original shedding rules from play.clj.",
       rules: `<ol class="rules">
         <li>Play a card whose three glyphs each <b>match or beat</b> the active card, position by position.</li>
@@ -956,10 +1092,11 @@ button { font: inherit; color: inherit; }
         <li>Down to one card, call <b>RPS!</b> First to empty their hand wins.</li></ol>`,
       start() {
         const d = shuffle(IDS), n = opponents + 1;
-        const players = [{ name: "You", human: true }, ...BOTS.slice(0, opponents).map(name => ({ name, human: false }))];
+        const cast = lineup();
+        const players = [{ name: "You", human: true }, ...cast.map(({ name, key }) => ({ name, key, human: false }))];
         players.forEach((p, i) => { p.hand = d.slice(i * HAND, (i + 1) * HAND); });
         const pile = d.slice(n * HAND);
-        st = { players, deck: pile.slice(1), discard: [pile[0]], current: Math.random() * n | 0, nextDraws: 0, nextSkip: false, done: false, passes: 0, chips: {} };
+        st = { players, cast, deck: pile.slice(1), discard: [pile[0]], current: Math.random() * n | 0, nextDraws: 0, nextSkip: false, done: false, passes: 0, chips: {} };
         say(`Classic: new deal. ${st.current === 0 ? "You lead" : nameOf(st.current) + " leads"}.`);
         later(step, st.current === 0 ? 0 : 700);
       },
@@ -1011,7 +1148,18 @@ button { font: inherit; color: inherit; }
     $("seg").hidden = !G.players;
     document.querySelectorAll("#seg button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.n === opponents)));
     $("rules-title").textContent = `How to play ${G.name}`;
+    renderLineup();
     $("rules").innerHTML = G.rules;
+  }
+  function renderLineup() {
+    const seats = lineup(), keys = Object.keys(G.cast), many = seats.length > 1;
+    $("lineup").innerHTML = `<span>${many ? "Opponents" : "Opponent"}</span>` + seats.map((x, i) =>
+      `<label><span class="sr-only">Opponent ${i + 1}</span><select data-seat="${i}">${keys.map(k =>
+        `<option value="${k}"${k === x.key ? " selected" : ""}>${k} · ${LEVELS[G.cast[k].level]}</option>`).join("")}</select></label>`).join("");
+    // The rail describes the opponents actually at the table, which only change when a new game starts.
+    const at = st && st.cast || seats;
+    $("cast-title").textContent = at.length > 1 ? "Your opponents" : "Your opponent";
+    $("cast").innerHTML = at.map(x => `<li><b>${x.name}</b><span class="lvl">${LEVELS[G.cast[x.key].level]}</span><span class="t">${G.cast[x.key].trait}</span></li>`).join("");
   }
   function renderLog() { $("log").innerHTML = logItems.slice(0, 14).map(l => `<li>${l}</li>`).join(""); }
   function renderScore() {
@@ -1044,6 +1192,14 @@ button { font: inherit; color: inherit; }
     if (b && b.dataset.g !== gid) { gid = b.dataset.g; logItems = []; renderLog(); newGame(); }
   });
   $("seg").addEventListener("click", e => { const b = e.target.closest("[data-n]"); if (b) { opponents = +b.dataset.n; newGame(); } });
+  // Changing an opponent starts a new game against the new lineup. Choices for seats beyond the current bot count are kept.
+  $("lineup").addEventListener("change", e => {
+    const i = +e.target.dataset.seat; if (Number.isNaN(i)) return;
+    const keys = Array.from({ length: 3 }, (_, k) => (picks[gid] || [])[k] || "Ada");
+    lineup().forEach((x, k) => { keys[k] = x.key; });
+    keys[i] = e.target.value; picks[gid] = keys;
+    newGame();
+  });
   $("new-game").addEventListener("click", newGame);
   $("again").addEventListener("click", newGame);
   const closeEnd = () => { $("overlay").hidden = true; };
@@ -1057,7 +1213,7 @@ button { font: inherit; color: inherit; }
   window.claude?.hot?.snapshot?.(() => ({ gid, opponents, st, logItems }));
   function start(data) {
     if (!GAMES[gid]) gid = "showdown";
-    if (data && data.st && GAMES[data.gid]) {
+    if (data && data.st && data.st.cast && GAMES[data.gid]) {
       gid = data.gid; opponents = data.opponents || opponents; st = data.st; logItems = data.logItems || [];
       G = GAMES[gid]; renderChrome(); renderLog(); draw(); G.resume();
     } else newGame();
